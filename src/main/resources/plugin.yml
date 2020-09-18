@@ -1,0 +1,11 @@
+name: UpdateNotifications
+version: "${pom.version}"
+api: ["1.0.0"]
+author: PetteriM1
+main: me.petterim1.updatenotificationservice.Main
+
+commands:
+  version:
+    description: Show the Nukkit version this server is running
+    permission: "nukkit.command.version"
+    aliases: ["ver"]
