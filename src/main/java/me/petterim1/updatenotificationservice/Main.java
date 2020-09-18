@@ -33,7 +33,7 @@ public class Main extends PluginBase implements Listener {
     public void onEnable() {
         saveDefaultConfig();
         if (!getServer().getName().equals("Nukkit")) {
-            getLogger().error("§cThis plugin supports only official Nukkit build!");
+            getLogger().error("§cThis plugin supports only official Nukkit builds!");
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
