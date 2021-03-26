@@ -3,6 +3,8 @@ version: "${pom.version}"
 api: ["1.0.0"]
 author: PetteriM1
 main: me.petterim1.updatenotificationservice.Main
+website: https://cloudburstmc.org/resources/updatenotifications.563/
+softdepend: ["DiscordChat"]
 
 commands:
   version:

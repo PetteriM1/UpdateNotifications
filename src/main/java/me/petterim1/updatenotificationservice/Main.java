@@ -26,16 +26,23 @@ public class Main extends PluginBase implements Listener {
     private String currentBranch;
     private boolean opJoin;
     private boolean opVersion;
+    private boolean discordConsole;
     private boolean skipDuplicate;
     private String alreadyNotified;
 
     @Override
     public void onEnable() {
-        saveDefaultConfig();
         if (!getServer().getName().equals("Nukkit")) {
             getLogger().error("§cThis plugin supports only official Nukkit builds!");
             getServer().getPluginManager().disablePlugin(this);
             return;
+        }
+        saveDefaultConfig();
+        if (getConfig().getInt("config-version") != 2) {
+            getConfig().set("update-notifications.on-discord-console-channel", true);
+            getConfig().set("config-version", 2);
+            getConfig().save();
+            getLogger().info("Config updated to version 2");
         }
         currentVer = getVersion();
         currentBranch = getBranch();
@@ -48,6 +55,15 @@ public class Main extends PluginBase implements Listener {
         }
         opJoin = getConfig().getBoolean("update-notifications.on-op-join-server");
         opVersion = getConfig().getBoolean("update-notifications.on-op-version-command");
+        discordConsole = getConfig().getBoolean("update-notifications.on-discord-console-channel");
+        if (discordConsole) {
+            try {
+                Class.forName("me.petterim1.discordchat.API");
+            } catch (Exception ignore) {
+                discordConsole = false;
+                getLogger().info("DiscordChat not found, disabling integration");
+            }
+        }
         skipDuplicate = getConfig().getBoolean("skip-duplicated-notifications");
         if (getConfig().getInt("update-check.minutes") > 0) {
             getServer().getScheduler().scheduleRepeatingTask(this, () -> checkForUpdates(getServer().getConsoleSender(), true, false), getConfig().getInt("update-check.minutes") * 1200);
@@ -100,6 +116,9 @@ public class Main extends PluginBase implements Listener {
                     if (!currentVer.equals(latest)) {
                         sender.sendMessage("§aThere is an update available for §cNukkit§a! §7(Current version: §e" + currentBranch + '/' + currentVer + "§7, Latest version: §e" + currentBranch + '/' + latest + "§7)");
                         alreadyNotified = latest;
+                        if (discordConsole) {
+                            me.petterim1.discordchat.API.sendToConsole("[UpdateNotifications] There is an update available for Nukkit! (Current version: " + currentBranch + '/' + currentVer + ", Latest version: " + currentBranch + '/' + latest + ')');
+                        }
                     } else if (command) {
                         sender.sendMessage("§aYou are running the latest version!");
                     }

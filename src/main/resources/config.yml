@@ -1,12 +1,13 @@
 # Config version
 # Do not edit
-config-version: 1
+config-version: 2
 
 # Show update notifications
 update-notifications:
   on-server-startup: true
   on-op-join-server: true
   on-op-version-command: true
+  on-discord-console-channel: true
 
 # Show same update notifications in console only once
 skip-duplicated-notifications: true
